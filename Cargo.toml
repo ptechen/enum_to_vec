@@ -1,0 +1,19 @@
+[package]
+name = "enum_to_vec"
+version = "0.1.0"
+edition = "2021"
+homepage = "https://github.com/ptechen"
+documentation = "https://docs.rs/enum_to_vec"
+repository = "https://github.com/ptechen/enum_to_vec.git"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+description = "Enum to vec"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2", features = ["full"] }
+proc-macro2 = "1"
+quote = { version = "1" }
+heck = "0.5.0"
