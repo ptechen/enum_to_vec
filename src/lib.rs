@@ -6,8 +6,7 @@ use proc_macro2::{Ident, Span};
 use quote::quote;
 use syn::{parse_macro_input, ItemEnum, TypePath};
 
-/// ignore_field
-#[proc_macro_derive(ToVec, attributes(snake_case))]
+#[proc_macro_derive(ToVec, attributes(snake_case, ignore_segments))]
 pub fn enum_to_vec_derive(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as ItemEnum);
     impl_enum_to_vec(input)
@@ -17,9 +16,13 @@ fn impl_enum_to_vec(input: ItemEnum) -> TokenStream {
     let name = &input.ident;
     let mut to_vec_tokens = vec![];
     let mut snake_case = false;
+    let mut ignore_segments = false;
     for attr in &input.attrs {
         if attr.path().is_ident("snake_case") {
             snake_case = true;
+        }
+        if attr.path().is_ident("ignore_segments") {
+            ignore_segments = true;
         }
     }
 
@@ -28,7 +31,7 @@ fn impl_enum_to_vec(input: ItemEnum) -> TokenStream {
         let mut list = vec![];
         for field in variant.fields.iter() {
             if let syn::Type::Path(TypePath { path, .. }) = &field.ty {
-                if field.ident.is_none() {
+                if field.ident.is_none() && !ignore_segments{
                     for _seg in path.segments.iter() {
                         let ident = _seg.ident.clone();
                         list.push(quote! {#ident});

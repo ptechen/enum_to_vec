@@ -1,6 +1,7 @@
 use enum_to_vec::ToVec;
 
 #[derive(ToVec)]
+#[ignore_segments]
 enum Test {
     Test,
     TestA,
